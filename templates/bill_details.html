@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Bill #{{ bill['id'] }}</h2>
+<table class="table table-bordered w-50">
+  <tr><th>Customer</th><td>{{ bill['customer_name'] }}</td></tr>
+  <tr><th>Phone</th><td>{{ bill['phone'] }}</td></tr>
+  <tr><th>Item</th><td>{{ bill['item_description'] }}</td></tr>
+  <tr><th>Quantity</th><td>{{ bill['quantity'] }}</td></tr>
+  <tr><th>Amount</th><td>₹{{ "%.2f"|format(bill['amount']) }}</td></tr>
+  <tr><th>Bill Date</th><td>{{ bill['bill_date'] }}</td></tr>
+  <tr><th>Due Date</th><td>{{ bill['due_date'] }}</td></tr>
+  <tr><th>Payment Mode</th><td>{{ bill['payment_mode'] }}</td></tr>
+  <tr><th>Status</th><td><span class="badge {{ 'bg-success' if bill['status']=='Paid' else 'bg-warning text-dark' }}">{{ bill['status'] }}</span></td></tr>
+</table>
+
+<div class="d-flex gap-2">
+  {% if bill['status'] != 'Paid' %}
+  <form method="post" action="{{ url_for('mark_paid', bill_id=bill['id']) }}">
+    <button class="btn btn-success">Mark as Paid</button>
+  </form>
+  {% endif %}
+  <form method="post" action="{{ url_for('delete_bill', bill_id=bill['id']) }}" onsubmit="return confirm('Delete this bill?');">
+    <button class="btn btn-danger">Delete Bill</button>
+  </form>
+  <a href="{{ url_for('bills') }}" class="btn btn-secondary">Back to Bills</a>
+</div>
+{% endblock %}

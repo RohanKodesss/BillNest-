@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center p-3"><h6>Total Bills</h6><h3>{{ total_bills }}</h3></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3"><h6>Total Amount</h6><h3>₹{{ "%.2f"|format(total_amount) }}</h3></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3"><h6>Paid</h6><h3>₹{{ "%.2f"|format(paid_amount) }}</h3></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3"><h6>Unpaid</h6><h3>₹{{ "%.2f"|format(unpaid_amount) }}</h3></div>
+  </div>
+</div>
+
+<h4>Recent Bills</h4>
+<table class="table table-bordered">
+  <thead><tr><th>ID</th><th>Customer</th><th>Item</th><th>Amount</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for b in recent_bills %}
+    <tr>
+      <td><a href="{{ url_for('bill_details', bill_id=b['id']) }}">#{{ b['id'] }}</a></td>
+      <td>{{ b['customer_name'] }}</td>
+      <td>{{ b['item_description'] }}</td>
+      <td>₹{{ "%.2f"|format(b['amount']) }}</td>
+      <td><span class="badge {{ 'bg-success' if b['status']=='Paid' else 'bg-warning text-dark' }}">{{ b['status'] }}</span></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="text-center">No bills yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
